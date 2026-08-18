@@ -1,14 +1,30 @@
 main {
-width: min(100% - 2rem, 70rem);
-margin: 0 auto;
-padding: 4rem 0;
+  width: min(100% - 2rem, 70rem);
+  margin: 0 auto;
+  padding: 3rem 0;
 }
 
-h1 {
-margin: 0;
-color: #172033;
+header {
+  margin-bottom: 2rem;
 }
 
-p {
-color: #526079;
+header p {
+  margin: 0.25rem 0;
+}
+
+section > div {
+  display: grid;
+  gap: 1rem;
+}
+
+article {
+  padding: 1.25rem;
+  border: 1px solid #d9dfeb;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+article h2,
+article p {
+  margin-top: 0;
 }
