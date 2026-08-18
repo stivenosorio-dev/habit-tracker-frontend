@@ -1,25 +1,22 @@
 import { useState } from "react";
+import Button from "../../../components/ui/Button";
 
-function HabitCFard({ habit }) {
-
-  const [markedLocally, setMarketLocally] = useState(false);
-
-  function handleMarketLocally(){
-    setMarketLocally(true);
-  }
-
+function HabitCard({ habit }) {
+  const [markedLocally, setMarkedLocally] = useState(false)
 
   return (
-    <article>
-      <h2>{habit.name}</h2>
-      <p>{habit.description}</p>
-      <span>Racha actual: {habit.currentStreak} dias</span>
-
-      <button type="button" onClick={handleMarketLocally} disabled={markedLocally}>
-        {markedLocally ? "Marcado localmente" : "Marcar como hecho"}
-      </button>
+    <article aria-labelledby={`habit-title-${habit.id}`}>
+      <h2 id={`habit-title-${habit.id}`}>{habit.name}</h2>
+      <p>{habit.description || 'Sin descripción'}</p>
+      <p>Racha actual: {habit.currentStreak} días</p>
+      <Button
+        onClick={() => setMarkedLocally(true)}
+        disabled={markedLocally}
+      >
+        {markedLocally ? 'Marcado localmente' : 'Marcar como hecho'}
+      </Button>
     </article>
-  );
+  )
 }
 
-export default HabitCFard;
+export default HabitCard
