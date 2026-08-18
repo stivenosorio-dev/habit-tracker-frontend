@@ -3,56 +3,63 @@ import DashboardHeader from "./features/habits/components/DashboardHeader";
 import HabitList from "./features/habits/components/HabitList";
 
 import { useState } from "react";
-
+import { useDocumentTitle } from "./features/habits/hooks/useDocumentTitle";
+import HabitSummary from "./features/habits/components/HabitSummary";
+import ConnectionStatus from "./features/shared/components/ConnectionStatus";
 const demoUser = {
-  id: "user-demo",
-  displayName: "Ana",
-  email: "ana@example.com",
+  id: 'user-demo',
+  displayName: 'Ana',
+  email: 'ana@example.com',
   xpTotal: 40,
   level: 1,
-  createdAt: "2026-08-17T20:00:00Z",
-};
+  createdAt: '2026-08-17T20:00:00Z',
+}
 
 const demoHabits = [
   {
-    id: "habit-1",
-    name: "Leer",
-    description: "Leer 20 páginas",
-    category: "Estudio",
+    id: 'habit-1',
+    name: 'Leer',
+    description: 'Leer 20 páginas',
+    category: 'Estudio',
     currentStreak: 3,
     longestStreak: 7,
     active: true,
   },
   {
-    id: "habit-2",
-    name: "Caminar",
-    description: "Caminar durante 30 minutos",
-    category: "Salud",
+    id: 'habit-2',
+    name: 'Caminar',
+    description: 'Caminar durante 30 minutos',
+    category: 'Salud',
     currentStreak: 1,
     longestStreak: 4,
     active: true,
   },
-];
-
+]
 
 function App() {
+  const [message, setMessage] = useState('')
 
-  const [message, setMessage] = useState("");
+  useDocumentTitle('Dashboard | Habit Tracker')
 
-  function handleDemoAction(){
-    setMessage("La acción local funcionó. Todavía no se ha enviado al backend.");
+  function handleDemoAction() {
+    setMessage('La acción local funcionó. Todavía no se ha enviado al backend.')
   }
 
   return (
     <main>
+      <ConnectionStatus />
       <DashboardHeader user={demoUser} />
-      <button type="button" onClick={handleDemoAction}>Probar interaccion</button>
-      {message && <p role="status">{message}</p>}
-      <HabitList habits={demoHabits} />
-    
 
+      <button type="button" onClick={handleDemoAction}>
+        Probar interacción
+      </button>
+
+      {message && <p role="status">{message}</p>}
+
+      <HabitSummary habits={demoHabits} />
+      <HabitList habits={demoHabits} />
     </main>
-  );
+  )
 }
 
-export default App;
+export default App
