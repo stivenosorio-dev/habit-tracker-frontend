@@ -2,6 +2,8 @@ import "./App.css";
 import DashboardHeader from "./features/habits/components/DashboardHeader";
 import HabitList from "./features/habits/components/HabitList";
 
+import { useState } from "react";
+
 const demoUser = {
   id: "user-demo",
   displayName: "Ana",
@@ -32,10 +34,20 @@ const demoHabits = [
   },
 ];
 
+
 function App() {
+
+  const [message, setMessage] = useState("");
+
+  function handleDemoAction(){
+    setMessage("La acción local funcionó. Todavía no se ha enviado al backend.");
+  }
+
   return (
     <main>
       <DashboardHeader user={demoUser} />
+      <button type="button" onClick={handleDemoAction}>Probar interaccion</button>
+      {message && <p role="status">{message}</p>}
       <HabitList habits={demoHabits} />
     
 
