@@ -1,72 +1,67 @@
-import { useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import Button from '../../../components/ui/Button.jsx'
-import FormField from '../../../components/ui/FormField.jsx'
-import SelectField from '../../../components/ui/SelectField.jsx'
-import { useCreateHabitMutation } from '../hooks/useCreateHabitMutation.js'
+import { Link } from 'react-router-dom'
+import { useAuthStore } from '../../auth/store/authStore.js'
+import DashboardHeader from '../components/DashboardHeader.jsx'
+import HabitList from '../components/HabitList.jsx'
+import HabitSummary from '../components/HabitSummary.jsx'
+import { useHabitsQuery } from '../hooks/useHabitsQuery.js'
 
-const categories = ['Salud', 'Estudio', 'Trabajo', 'Finanzas', 'Personal']
-
-function HabitFormPage() {
-  const navigate = useNavigate()
-  const createMutation = useCreateHabitMutation()
+function DashboardPage() {
+  const profile = useAuthStore((state) => state.profile)
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({ defaultValues: { name: '', description: '', category: '' } })
+    data: habits = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useHabitsQuery()
 
-  async function onSubmit(values) {
-    await createMutation.mutateAsync(values)
-    navigate('/')
+  if (isLoading) {
+    return (
+      <main className="py-12 text-center" aria-live="polite">
+        <p className="text-ink-600">Cargando tus hábitos...</p>
+      </main>
+    )
+  }
+
+  if (isError) {
+    return (
+      <main className="rounded-2xl bg-red-50 p-6 text-red-700">
+        <h1 className="text-xl font-bold">No se pudieron cargar los hábitos</h1>
+        <p className="mt-2">{error.message}</p>
+        <button
+          type="button"
+          onClick={() => refetch()}
+          className="mt-4 font-semibold underline"
+        >
+          Reintentar
+        </button>
+      </main>
+    )
   }
 
   return (
-    <main className="mx-auto w-full max-w-2xl">
-      <h1 className="mb-8 text-3xl font-bold text-ink-900">Crear hábito</h1>
+    <main>
+      {profile && <DashboardHeader user={profile} />}
 
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="space-y-6 rounded-2xl bg-surface p-6 shadow-sm ring-1 ring-slate-200 sm:p-8"
-      >
-        <FormField
-          label="Nombre"
-          name="name"
-          register={register}
-          rules={{ required: 'El nombre es obligatorio' }}
-          error={errors.name}
-        />
-        <div className="space-y-2">
-          <label htmlFor="description" className="block text-sm font-semibold text-ink-900">
-            Descripción
-          </label>
-          <textarea
-            id="description"
-            rows="4"
-            className="w-full rounded-lg border border-slate-300 px-3 py-2"
-            {...register('description')}
-          />
+      <div className="mb-8 flex items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-medium text-brand-600">Tu rutina</p>
+          <h1 className="mt-1 text-3xl font-bold text-ink-900">Mis hábitos</h1>
         </div>
-        <SelectField
-          label="Categoría"
-          name="category"
-          options={categories}
-          register={register}
-          error={errors.category}
-        />
-        {createMutation.isError && (
-          <p role="alert" className="text-sm text-danger-600">
-            {createMutation.error.message}
-          </p>
-        )}
-        <div className="flex justify-end">
-          <Button type="submit" disabled={createMutation.isPending}>
-            {createMutation.isPending ? 'Guardando...' : 'Guardar hábito'}
-          </Button>
-        </div>
-      </form>
+        <Link
+          to="/habits/new"
+          className="rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-500"
+        >
+          Nuevo hábito
+        </Link>
+      </div>
+
+      <div className="space-y-8">
+        <HabitSummary habits={habits} />
+        <HabitList habits={habits} />
+      </div>
     </main>
   )
 }
 
-export default HabitFormPage
+export default DashboardPage

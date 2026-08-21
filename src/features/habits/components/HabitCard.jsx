@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import Button from '../../../components/ui/Button.jsx'
 
 function HabitCard({ habit }) {
   return (
@@ -23,15 +22,12 @@ function HabitCard({ habit }) {
         <p className="text-sm text-ink-600">
           Mejor racha: <strong className="text-ink-900">{habit.longestStreak}</strong>
         </p>
-        <div className="flex items-center gap-3">
-          <Link
-            to={`/habits/${habit.id}`}
-            className="text-sm font-semibold text-brand-600 hover:text-brand-500"
-          >
-            Ver detalle
-          </Link>
-          <Button>Completar</Button>
-        </div>
+        <Link
+          to={`/habits/${habit.id}`}
+          className="text-sm font-semibold text-brand-600 hover:text-brand-500"
+        >
+          Ver detalle
+        </Link>
       </div>
     </article>
   )
