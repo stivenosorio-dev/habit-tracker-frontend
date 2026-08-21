@@ -17,5 +17,3 @@ export function useHabitLogsQuery(habitId) {
     enabled: Boolean(habitId),
   })
 }
-
-
