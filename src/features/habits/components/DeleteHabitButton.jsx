@@ -15,14 +15,18 @@ function DeleteHabitButton({ habitId }) {
       return
     }
 
-    await mutation.mutateAsync(habitId)
-    navigate('/')
+    try {
+      await mutation.mutateAsync(habitId)
+      navigate('/', { replace: true })
+    } catch {
+      // El mensaje visible se obtiene desde mutation.error.
+    }
   }
 
   return (
     <div>
       <Button variant="danger" onClick={handleDelete} disabled={mutation.isPending}>
-        {mutation.isPending ? 'Eliminando...' : 'Eliminar hábito'}
+        {mutation.isPending ? 'Eliminando...' : 'Eliminar'}
       </Button>
       {mutation.isError && (
         <p role="alert" className="mt-2 text-sm text-danger-600">
@@ -34,3 +38,5 @@ function DeleteHabitButton({ habitId }) {
 }
 
 export default DeleteHabitButton
+
+
