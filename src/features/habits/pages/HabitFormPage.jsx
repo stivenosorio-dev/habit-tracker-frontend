@@ -1,36 +1,73 @@
-import { useForm } from "react-hook-form";
-import Button from "../../../components/ui/Button.jsx";
-import FormField from "../../../components/ui/FormField.jsx";
-import SelectField from "../../../components/ui/SelectField.jsx";
+import { useEffect } from 'react'
+import { useForm } from 'react-hook-form'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import Button from '../../../components/ui/Button.jsx'
+import FormField from '../../../components/ui/FormField.jsx'
+import SelectField from '../../../components/ui/SelectField.jsx'
+import { useHabitsQuery } from '../hooks/useHabitsQuery.js'
+import { useCreateHabitMutation } from '../hooks/useCreateHabitMutation.js'
+import { useUpdateHabitMutation } from '../hooks/useUpdateHabitMutation.js'
 
-const categories = ["Salud", "Estudio", "Trabajo", "Finanzas", "Personal"];
+const categories = ['Salud', 'Estudio', 'Trabajo', 'Finanzas', 'Personal']
+const emptyValues = { name: '', description: '', category: '' }
 
 function HabitFormPage() {
+  const { id } = useParams()
+  const navigate = useNavigate()
+  const isEditing = Boolean(id)
+  const habitsQuery = useHabitsQuery()
+  const createMutation = useCreateHabitMutation()
+  const updateMutation = useUpdateHabitMutation()
+  const mutation = isEditing ? updateMutation : createMutation
+
   const {
     register,
+    reset,
     handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm({
-    defaultValues: {
-      name: "",
-      description: "",
-      category: "",
-    },
-  });
+    formState: { errors },
+  } = useForm({ defaultValues: emptyValues })
 
-  function onSubmit(values) {
-    console.log("Datos listos para enviar:", values);
+  const habit = habitsQuery.data?.find((item) => item.id === id)
+
+  useEffect(() => {
+    if (habit) {
+      reset({
+        name: habit.name,
+        description: habit.description || '',
+        category: habit.category || '',
+      })
+    }
+  }, [habit, reset])
+
+  if (isEditing && habitsQuery.isLoading) {
+    return <p className="py-8 text-center text-ink-600">Cargando hábito...</p>
+  }
+
+  if (isEditing && !habit) {
+    return (
+      <main className="space-y-4">
+        <h1 className="text-3xl font-bold text-ink-900">Hábito no encontrado</h1>
+        <Link to="/" className="font-semibold text-brand-600">Volver al dashboard</Link>
+      </main>
+    )
+  }
+
+  async function onSubmit(values) {
+    if (isEditing) {
+      await updateMutation.mutateAsync({ id, payload: values })
+    } else {
+      await createMutation.mutateAsync(values)
+    }
+
+    navigate('/')
   }
 
   return (
     <main className="mx-auto w-full max-w-2xl">
-      <div className="mb-8">
-        <p className="text-sm font-medium text-brand-600">Nuevo hábito</p>
-        <h1 className="mt-1 text-3xl font-bold text-ink-900">Crear hábito</h1>
-        <p className="mt-2 text-ink-600">
-          Define una actividad concreta que puedas repetir y medir.
-        </p>
-      </div>
+      <p className="text-sm font-medium text-brand-600">Hábitos</p>
+      <h1 className="mt-1 mb-8 text-3xl font-bold text-ink-900">
+        {isEditing ? 'Editar hábito' : 'Crear hábito'}
+      </h1>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -39,31 +76,20 @@ function HabitFormPage() {
         <FormField
           label="Nombre"
           name="name"
-          placeholder="Ej. Leer 20 páginas"
           register={register}
-          rules={{
-            required: "El nombre es obligatorio",
-            maxLength: {
-              value: 100,
-              message: "El nombre no puede superar 100 caracteres",
-            },
-          }}
+          rules={{ required: 'El nombre es obligatorio' }}
           error={errors.name}
         />
 
         <div className="space-y-2">
-          <label
-            htmlFor="description"
-            className="block text-sm font-semibold text-ink-900"
-          >
+          <label htmlFor="description" className="block text-sm font-semibold text-ink-900">
             Descripción
           </label>
           <textarea
             id="description"
             rows="4"
-            placeholder="Describe cómo realizarás este hábito"
-            className="w-full resize-y rounded-lg border border-slate-300 bg-surface px-3 py-2 text-ink-900 outline-none placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
-            {...register("description")}
+            className="w-full rounded-lg border border-slate-300 px-3 py-2"
+            {...register('description')}
           />
         </div>
 
@@ -75,16 +101,20 @@ function HabitFormPage() {
           error={errors.category}
         />
 
+        {mutation.isError && (
+          <p role="alert" className="text-sm text-danger-600">
+            {mutation.error.message}
+          </p>
+        )}
+
         <div className="flex justify-end">
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Validando..." : "Guardar hábito"}
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending ? 'Guardando...' : 'Guardar cambios'}
           </Button>
         </div>
       </form>
     </main>
-  );
+  )
 }
 
-export default HabitFormPage;
-
-
+export default HabitFormPage
