@@ -1,12 +1,4 @@
-function FormField({
-  label,
-  name,
-  type = 'text',
-  register,
-  rules,
-  error,
-  placeholder,
-}) {
+function FormField({ label, name, type = 'text', register, rules, error, placeholder }) {
   const errorId = `${name}-error`
 
   return (
@@ -20,7 +12,7 @@ function FormField({
         placeholder={placeholder}
         aria-invalid={Boolean(error)}
         aria-describedby={error ? errorId : undefined}
-        className="w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-ink-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+        className="w-full rounded-lg border border-slate-300 bg-surface px-3 py-2 text-ink-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
         {...register(name, rules)}
       />
       {error && (

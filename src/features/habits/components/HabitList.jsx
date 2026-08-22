@@ -8,13 +8,10 @@ function HabitList({ habits }) {
 
   return (
     <section aria-labelledby="habits-title">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div>
-          <p className="text-sm font-medium text-brand-600">Constancia diaria</p>
-          <h2 id="habits-title" className="mt-1 text-2xl font-bold text-ink-900">
-            Hábitos activos
-          </h2>
-        </div>
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+        <h2 id="habits-title" className="text-2xl font-bold text-ink-900">
+          Hábitos activos
+        </h2>
         <p className="text-sm text-ink-600">{habits.length} en seguimiento</p>
       </div>
 

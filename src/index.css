@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@import "tailwindcss";
+@import "./styles/accessibility.css";
 
 @theme {
   --color-brand-50: #f5f3ff;
