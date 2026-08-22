@@ -11,4 +11,4 @@ function AuthBootstrap({ children }) {
   return children;
 }
 
-export { AuthBootstrap };
+export default AuthBootstrap;
