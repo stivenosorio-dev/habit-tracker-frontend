@@ -3,13 +3,13 @@
 @import "./styles/accessibility.css";
 
 @theme {
-  --color-brand-50: #f5f3ff;
-  --color-brand-500: #7c3aed;
-  --color-brand-600: #6d28d9;
-  --color-ink-900: #172033;
-  --color-ink-600: #526079;
-  --color-surface: #ffffff;
-  --color-page: #f5f7fb;
+  --color-brand-50: #EAF2F8;
+  --color-brand-500: #9A5319  ;
+  --color-brand-600: #BC6C25 ;
+  --color-ink-900: #3E2723  ;
+  --color-ink-600: #A3B19B;
+  --color-surface: #FFFFFF;
+  --color-page: #F8F9FA;
   --color-danger-600: #dc2626;
 }
 
