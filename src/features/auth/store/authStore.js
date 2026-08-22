@@ -1,11 +1,14 @@
 import { create } from "zustand";
-import { subscribeToAuthState, signOutUser } from "../../../lib/firebase/authService";
+import {
+  subscribeToAuthState,
+  signOutUser,
+} from "../../../lib/firebase/authService";
 import { getAuthenticatedProfile } from "../../../lib/api/sessionApi";
 
 export const useAuthStore = create((set) => ({
-  firebase: null,
+  firebaseUser: null,
   profile: null,
-  isInicializing: true,
+  isInitializing: true,
   error: null,
   unsubscribe: null,
 
@@ -50,7 +53,14 @@ export const useAuthStore = create((set) => ({
       error: null,
     });
   },
+
+  setProfile: (profileOrUpdater) =>
+    set((state) => ({
+      profile:
+        typeof profileOrUpdater === "function"
+          ? profileOrUpdater(state.profile)
+          : profileOrUpdater,
+    })),
+
   clearError: () => set({ error: null }),
 }));
-
-
